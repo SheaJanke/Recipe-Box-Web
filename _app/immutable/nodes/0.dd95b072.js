@@ -1,0 +1,1 @@
+import{L as u}from"../chunks/_layout.ea8fd437.js";const o=!0,r=({params:e})=>({recipeId:e.slug}),t=Object.freeze(Object.defineProperty({__proto__:null,load:r,prerender:o},Symbol.toStringTag,{value:"Module"}));export{u as component,t as universal};
