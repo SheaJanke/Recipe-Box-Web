@@ -12,6 +12,7 @@
 	import { db, storage } from '$lib/firebase';
 	import { userStore } from '$lib/stores';
 	import { ref, uploadBytes } from 'firebase/storage';
+	import { base } from '$app/paths';
 
 	export let recipe: Recipe;
 	export let editMode = false;
@@ -36,7 +37,6 @@
 			})
 		)
 			.then(() => {
-				console.log('success',[...imgUrls, ...filePaths] );
 				imgUrls = [...imgUrls, ...filePaths];
 				fileList = undefined;
 			})
@@ -93,12 +93,15 @@
 		class="w-full h-16 bg-blue-500 md:bg-slate-100 p-3 flex flex-row justify-between items-center shadow text-white md:text-neutral-900"
 	>
 		<div class="flex flex-row items-center gap-2">
-			<button class="btn-icon md:hidden" on:click={() => goto('/')}>
+			<button class="btn-icon md:hidden" on:click={() => goto(`${base}`)}>
 				<ChevronLeftIcon class="h-8 w-8" />
 			</button>
 			<div class="font-bold text-2xl">{recipe.name}</div>
 		</div>
-		<button class="btn-icon md:variant-filled md:bg-blue-500 md:shadow w-10 h-10" on:click={toggleEditMode}>
+		<button
+			class="btn-icon md:variant-filled md:bg-blue-500 md:shadow w-10 h-10"
+			on:click={toggleEditMode}
+		>
 			{#if editMode}
 				<SaveIcon />
 			{:else}
