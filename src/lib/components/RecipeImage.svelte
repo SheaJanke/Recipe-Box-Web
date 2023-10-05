@@ -26,11 +26,6 @@
 				})}
 		/>
 	{:else}
-		<ProgressRadial
-			class="w-1/3 h-1/3"
-			stroke={100}
-			track="stroke-blue-500/30"
-			meter="stroke-blue-500"
-		/>
+		<ProgressRadial width="w-1/3" stroke={100} track="stroke-blue-500/30" meter="stroke-blue-500" />
 	{/if}
 </div>

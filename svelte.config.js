@@ -9,7 +9,9 @@ const config = {
 
 	kit: {
 		adapter: adapter(),
-		base: dev ? '' : process.env.BASE_PATH,
+		paths: {
+			base: dev ? '' : process.env.BASE_PATH,
+		},
 		prerender: {
 			entries: ['/', '/id']
 		}

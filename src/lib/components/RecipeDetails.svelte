@@ -86,6 +86,8 @@
 			editMode = true;
 		}
 	}
+
+	console.log('base', base);
 </script>
 
 <div class="w-full h-full border-l border-neutral-400 bg-slate-200 flex flex-col">
@@ -93,7 +95,7 @@
 		class="w-full h-16 bg-blue-500 md:bg-slate-100 p-3 flex flex-row justify-between items-center shadow text-white md:text-neutral-900"
 	>
 		<div class="flex flex-row items-center gap-2">
-			<button class="btn-icon md:hidden" on:click={() => goto(`${base}`)}>
+			<button class="btn-icon md:hidden" on:click={() => goto(`${base || '/'}`)}>
 				<ChevronLeftIcon class="h-8 w-8" />
 			</button>
 			<div class="font-bold text-2xl">{recipe.name}</div>
