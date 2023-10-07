@@ -16,7 +16,7 @@
 			<span class="font-bold text-lg">{recipe.name}</span>
 			<div class="flex flex-row gap-2">
 				{#each displayedTags as tag}
-                <Tag tag={`#${tag}`} />
+                <Tag {tag} />
 				{/each}
 				{#if additionalTags > 0}
 					<Tag tag={`+${additionalTags}`} />

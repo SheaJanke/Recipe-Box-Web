@@ -13,15 +13,11 @@
 	}
 
 	function signInWithEmailPassword() {
-		signInWithEmailAndPassword(auth, email, password)
-			.then((value) => console.log(value))
-			.catch((error) => console.log(error.message));
+		signInWithEmailAndPassword(auth, email, password);
 	}
 
 	function signInWIthGoogle() {
-		signInWithPopup(auth, googleProvider)
-			.then((user) => console.log(user))
-			.catch((error) => console.log('error', error));
+		signInWithPopup(auth, googleProvider);
 	}
 </script>
 

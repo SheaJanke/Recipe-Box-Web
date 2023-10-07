@@ -43,12 +43,10 @@
 		unsubscribeFromRecipes = onSnapshot(
 			collection(db, `users/${user.uid}/recipes`),
 			(recipesSnapshot) => {
-				console.log('recived updates');
 				const recipes = recipesSnapshot.docs.map((recipeDoc) => recipeDoc.data()) as Recipe[];
 				recipeStore.set(recipes);
 			}
 		);
-		//const recipesSnapshot = await getDocs(collection(db, `users/${user.uid}/recipes`));
 	});
 
 	$: selectedRecipe = $recipeStore?.find((recipe) => recipe.id === data.recipeId);
