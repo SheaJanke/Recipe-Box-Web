@@ -2,14 +2,21 @@
 	import imageCompression from 'browser-image-compression';
 	import type { Recipe } from '$lib/types';
 	import { v4 as uuidv4 } from 'uuid';
-	import { FileDropzone, InputChip, ProgressRadial, getToastStore } from '@skeletonlabs/skeleton';
+	import {
+		FileDropzone,
+		InputChip,
+		ProgressRadial,
+		getModalStore,
+		getToastStore
+	} from '@skeletonlabs/skeleton';
 	import RecipeImage from './RecipeImage.svelte';
 	import ChevronLeftIcon from '~icons/mdi/chevron-left';
+	import DeleteIcon from '~icons/mdi/delete';
 	import PencilIcon from '~icons/mdi/pencil';
 	import SaveIcon from '~icons/mdi/content-save';
 	import { goto } from '$app/navigation';
 	import Tag from './Tag.svelte';
-	import { doc, setDoc } from 'firebase/firestore';
+	import { deleteDoc, doc, setDoc } from 'firebase/firestore';
 	import { db, storage } from '$lib/firebase';
 	import { userStore } from '$lib/stores';
 	import { ref, uploadBytes } from 'firebase/storage';
@@ -19,6 +26,7 @@
 	export let editMode = false;
 
 	const toastStore = getToastStore();
+	const modalStore = getModalStore();
 
 	let uploadingFiles = 0;
 	let name = recipe.name;
@@ -31,6 +39,22 @@
 
 	function onDeleteImage(imgUrl: string) {
 		imgUrls = imgUrls.filter((url) => url !== imgUrl);
+	}
+
+	function onDeleteRecipe() {
+		modalStore.trigger({
+			type: 'confirm',
+			title: 'Delete Recipe?',
+			body: `Are you sure you want to delete ${name}?`,
+			buttonTextConfirm: 'Delete',
+			response: (response: boolean) => {
+				if (response) {
+					deleteDoc(doc(db, `users/${userId}/recipes/${recipe.id}`)).then(() => {
+						goto(`${base}/`);
+					});
+				}
+			}
+		});
 	}
 
 	function onFocusName(event: Event) {
@@ -49,11 +73,9 @@
 				const fileRef = ref(storage, filePaths[index]);
 				return new Promise<void>(async (resolve, reject) => {
 					try {
-						console.log(`original size ${file.size / 1024 / 1024} MB`); // smaller than maxSizeMB
 						const compressedFile = await imageCompression(file, {
 							maxSizeMB: 0.1
 						});
-						console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
 						await uploadBytes(fileRef, compressedFile);
 						resolve();
 					} catch {
@@ -143,6 +165,12 @@
 			{:else}
 				<PencilIcon />
 			{/if}
+		</button>
+		<button
+			class="btn-icon md:variant-filled md:bg-red-500 md:shadow w-10 h-10"
+			on:click={onDeleteRecipe}
+		>
+			<DeleteIcon />
 		</button>
 	</div>
 	<div class="m-2 p-2 flex flex-col gap-2 bg-slate-100 rounded-md shadow flex-1">
