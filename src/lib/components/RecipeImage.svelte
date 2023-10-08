@@ -4,7 +4,7 @@
 	import { getDownloadURL, ref } from 'firebase/storage';
 	import CloseIcon from '~icons/mdi/window-close';
 
-	export let firebaseUrl: string;
+	export let firebaseUrl: string | undefined;
 	export let editMode: boolean;
 	export let onDeleteImage: (url: string) => void;
 
@@ -12,7 +12,9 @@
 
 	let imgSrc: string | undefined;
 
-	getDownloadURL(ref(storage, firebaseUrl)).then((src) => (imgSrc = src));
+	if (firebaseUrl) {
+		getDownloadURL(ref(storage, firebaseUrl)).then((src) => (imgSrc = src));
+	}
 </script>
 
 <div
@@ -31,7 +33,7 @@
 		{#if editMode}
 			<button
 				class="btn-icon btn-sm variant-filled bg-red-600 absolute right-1 top-1 border border-white"
-				on:click={() => onDeleteImage(firebaseUrl)}
+				on:click={() => onDeleteImage(firebaseUrl || '')}
 			>
 				<CloseIcon />
 			</button>

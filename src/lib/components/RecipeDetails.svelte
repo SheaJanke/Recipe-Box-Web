@@ -1,7 +1,8 @@
 <script lang="ts">
+	import imageCompression from 'browser-image-compression';
 	import type { Recipe } from '$lib/types';
 	import { v4 as uuidv4 } from 'uuid';
-	import { FileDropzone, InputChip, getToastStore } from '@skeletonlabs/skeleton';
+	import { FileDropzone, InputChip, ProgressRadial, getToastStore } from '@skeletonlabs/skeleton';
 	import RecipeImage from './RecipeImage.svelte';
 	import ChevronLeftIcon from '~icons/mdi/chevron-left';
 	import PencilIcon from '~icons/mdi/pencil';
@@ -19,6 +20,7 @@
 
 	const toastStore = getToastStore();
 
+	let uploadingFiles = 0;
 	let name = recipe.name;
 	let tags = recipe.tags;
 	let notes = recipe.notes;
@@ -41,10 +43,23 @@
 			const extension = file.name.split('.').pop();
 			return `${$userStore?.uid}/${uuidv4()}.${extension}`;
 		});
+		uploadingFiles = filePaths.length;
 		Promise.all(
 			Array.from(files).map((file, index) => {
 				const fileRef = ref(storage, filePaths[index]);
-				return uploadBytes(fileRef, file);
+				return new Promise<void>(async (resolve, reject) => {
+					try {
+						console.log(`original size ${file.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+						const compressedFile = await imageCompression(file, {
+							maxSizeMB: 0.1
+						});
+						console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+						await uploadBytes(fileRef, compressedFile);
+						resolve();
+					} catch {
+						reject();
+					}
+				});
 			})
 		)
 			.then(() => {
@@ -61,6 +76,7 @@
 			})
 			.finally(() => {
 				fileList = undefined;
+				uploadingFiles = 0;
 			});
 	}
 
@@ -149,6 +165,9 @@
 			<section class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
 				{#each imgUrls as url}
 					<RecipeImage firebaseUrl={url} {editMode} {onDeleteImage} />
+				{/each}
+				{#each new Array(uploadingFiles) as _i}
+					<RecipeImage firebaseUrl={undefined} editMode={false} {onDeleteImage} />
 				{/each}
 				{#if editMode}
 					<FileDropzone

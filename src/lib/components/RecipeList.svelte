@@ -7,7 +7,7 @@
 	import AddRecipeIcon from '~icons/mdi/file-document-plus-outline';
 	import { goto } from '$app/navigation';
 	import { base } from '$app/paths';
-	import { createNewRecipe, type Recipe } from '$lib/types';
+	import { createNewRecipe } from '$lib/types';
 	import { doc, setDoc } from 'firebase/firestore';
 	import { db } from '$lib/firebase';
 
