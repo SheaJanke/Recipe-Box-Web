@@ -154,7 +154,7 @@
 					on:focus={onFocusName}
 				/>
 			{:else}
-				<div class="font-bold text-2xl">{recipe.name}</div>
+				<div class="font-bold text-2xl overflow-hidden overflow-ellipsis line-clamp-2">{recipe.name}</div>
 			{/if}
 		</div>
 		<button
@@ -189,7 +189,13 @@
 				{/each}
 			</div>
 		{/if}
-		<textarea class="textarea flex-1 resize-none" bind:value={notes} readonly={!editMode} />
+		{#if notes || editMode}
+			<textarea
+				class="textarea flex-1 resize-none min-h-[50%]"
+				bind:value={notes}
+				readonly={!editMode}
+			/>
+		{/if}
 		{#if imgUrls.length > 0}
 			<section class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
 				{#each imgUrls as url}
