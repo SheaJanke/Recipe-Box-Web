@@ -154,7 +154,9 @@
 					on:focus={onFocusName}
 				/>
 			{:else}
-				<div class="font-bold text-2xl overflow-hidden overflow-ellipsis line-clamp-2">{recipe.name}</div>
+				<div class="font-bold text-2xl overflow-hidden overflow-ellipsis line-clamp-2">
+					{recipe.name}
+				</div>
 			{/if}
 		</div>
 		<button
