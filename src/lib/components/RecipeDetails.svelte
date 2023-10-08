@@ -112,7 +112,8 @@
 				...recipe,
 				imgUrls,
 				name,
-				notes
+				notes,
+				tags
 			};
 			setDoc(doc(db, `users/${userId}/recipes/${recipe.id}`), updatedRecipe)
 				.then(() => {
