@@ -23,8 +23,6 @@
 				{/if}
 			</div>
 		</div>
-		<div class="w-8 h-8">
-			<ChevronRight class="w-6 h-6" />
-		</div>
+		<ChevronRight class="w-6 h-6" />
 	</a>
 </nav>

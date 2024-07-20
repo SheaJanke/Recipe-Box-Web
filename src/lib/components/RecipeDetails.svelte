@@ -11,6 +11,7 @@
 	} from '@skeletonlabs/skeleton';
 	import RecipeImage from './RecipeImage.svelte';
 	import ChevronLeftIcon from '~icons/mdi/chevron-left';
+	import ShareIcon from '~icons/mdi/share';
 	import DeleteIcon from '~icons/mdi/delete';
 	import PencilIcon from '~icons/mdi/pencil';
 	import SaveIcon from '~icons/mdi/content-save';
@@ -55,6 +56,10 @@
 				}
 			}
 		});
+	}
+
+	function onShareRecipe() {
+		window.open(`mailto:?subject=${encodeURIComponent(name)}&body=${encodeURIComponent(notes)}`);
 	}
 
 	function onFocusName(event: Event) {
@@ -141,7 +146,7 @@
 
 <div class="w-full h-full border-l border-neutral-400 bg-slate-200 flex flex-col">
 	<div
-		class="w-full h-16 bg-blue-500 md:bg-slate-100 p-3 flex flex-row justify-between gap-3 items-center shadow text-white md:text-neutral-900"
+		class="w-full h-16 bg-blue-500 md:bg-slate-100 p-3 flex flex-row justify-between md:gap-3 items-center shadow text-white md:text-neutral-900"
 	>
 		<div class="flex flex-row flex-1 items-center gap-2">
 			<button class="btn-icon md:hidden" on:click={() => goto(`${base || '/'}`)}>
@@ -169,6 +174,14 @@
 				<PencilIcon />
 			{/if}
 		</button>
+		{#if !editMode}
+			<button
+				class="btn-icon md:variant-filled md:bg-blue-500 md:shadow w-10 h-10"
+				on:click={onShareRecipe}
+			>
+				<ShareIcon />
+			</button>
+		{/if}
 		<button
 			class="btn-icon md:variant-filled md:bg-red-500 md:shadow w-10 h-10"
 			on:click={onDeleteRecipe}
