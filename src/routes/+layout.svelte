@@ -8,8 +8,50 @@
 	import { computePosition, autoUpdate, offset, shift, flip, arrow, size } from '@floating-ui/dom';
 	import { Modal, Toast, initializeStores, storePopup } from '@skeletonlabs/skeleton';
 	import type { Unsubscriber } from 'svelte/store';
+	import { onDestroy, onMount } from 'svelte';
 
 	export let data;
+
+	let wakeLock: WakeLockSentinel | null = null;
+
+	// Request the wake lock
+	async function requestWakeLock() {
+		try {
+			if ('wakeLock' in navigator) {
+				wakeLock = await navigator.wakeLock.request('screen');
+				console.log('Wake lock is active.');
+
+				// Handle wake lock release (e.g., if the system releases it)
+				wakeLock.addEventListener('release', () => {
+					console.log('Wake lock was released.');
+				});
+			} else {
+				console.warn('Wake Lock API not supported in this browser.');
+			}
+		} catch (err) {
+			console.error(`Failed to acquire wake lock: ${err}`);
+		}
+	}
+
+	// Re-acquire wake lock when visibility changes
+	function handleVisibilityChange() {
+		if (wakeLock !== null && document.visibilityState === 'visible') {
+			requestWakeLock();
+		}
+	}
+
+	onMount(() => {
+		requestWakeLock();
+		document.addEventListener('visibilitychange', handleVisibilityChange);
+	});
+
+	onDestroy(() => {
+		document.removeEventListener('visibilitychange', handleVisibilityChange);
+		if (wakeLock) {
+			wakeLock.release();
+			wakeLock = null;
+		}
+	});
 
 	initializeStores();
 
